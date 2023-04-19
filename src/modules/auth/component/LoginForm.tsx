@@ -2,13 +2,15 @@ import React from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ILoginParams, ILoginValidation } from '../../../models/auth';
 import { validLogin, validateLogin } from '../utils';
-import { Button, message, Space } from 'antd';
+import {  message } from 'antd';
+import { useTranslation} from 'react-i18next';
 
 interface Props {
   onLogin(values: ILoginParams): void;
 }
 
 const LoginForm = (props: Props) => {
+  const { t } = useTranslation()
 
   const { onLogin } = props
 
@@ -29,10 +31,8 @@ const LoginForm = (props: Props) => {
 
     setValidate(validate);
 
-    console.log(validate);
-
-    if (validate.email || validate.password) {
-      error(validate.email + '\n ,' + validate.password)
+    if (!validLogin(validate)) {
+      return;
     }
 
     onLogin(formValues);
@@ -52,7 +52,7 @@ const LoginForm = (props: Props) => {
       <div className="col-md-12">
         <div>
           <label htmlFor="inputEmail" className="form-label">
-            User Name:
+            {t('email')}
           </label>
         </div>
         <input
@@ -64,7 +64,7 @@ const LoginForm = (props: Props) => {
       <div className="col-md-12">
         <div>
           <label htmlFor="inputPassword" className="form-label">
-            Password
+            {t('password')}
           </label>
         </div>
         <input
@@ -89,7 +89,7 @@ const LoginForm = (props: Props) => {
           />
           <div>
             <label className="form-check-label" htmlFor="invalidCheck">
-              Remember Me
+              {t('rememberMe')}
             </label>
           </div>
         </div>
@@ -104,7 +104,7 @@ const LoginForm = (props: Props) => {
         type="submit"
         style={{ minWidth: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
-        Login
+        {t('login')}
       </button>
     </form>
   )

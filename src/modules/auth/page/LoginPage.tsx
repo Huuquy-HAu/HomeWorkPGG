@@ -11,14 +11,17 @@ import axios, { AxiosResponse } from 'axios'
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../configs/routes';
 import { Button, message } from 'antd';
+import { useTranslation } from 'react-i18next';
+
 
 type Props = {}
 
 const LoginPage = (props: Props) => {
-
+    const { t } = useTranslation()
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const Nav = useNavigate()
+    const { i18n } = useTranslation()
     const success = () => {
         message
             .open({
@@ -27,7 +30,7 @@ const LoginPage = (props: Props) => {
                 duration: 2.5,
             })
             .then(() => message.success('Đăng nhập thành công ', 2.5))
-            Nav(ROUTES.home)
+        Nav(ROUTES.home)
     };
 
     const onLogin = async (values: ILoginParams) => {
@@ -43,10 +46,14 @@ const LoginPage = (props: Props) => {
             console.log('set token oke');
             Cookies.set(ACCESS_TOKEN_KEY, res.data.data.token, { expires: values.rememberMe ? 7 : undefined });
             success()
-            
+            Nav(ROUTES.home)
             return;
         }
         setErrorMessage(getErrorMessageResponse(res));
+    }
+
+    const changeLanguage = (e:any) => {
+        i18n.changeLanguage(e.target.value)
     }
     return (
         <div
@@ -59,9 +66,16 @@ const LoginPage = (props: Props) => {
                 flexDirection: 'column',
             }}
         >
+            <select className="form-select w-25" onChange={(e) => {changeLanguage(e)}}>
+                <option value="vi">Tiếng Việt</option>
+                <option value="en">English</option>
+            </select>
             <img src={logo} alt="" style={{ maxWidth: '250px', margin: '32px' }} />
             <h1>Form Login V2</h1>
             <LoginForm onLogin={onLogin} />
+            <div >
+                <a href={ROUTES.signup}><button className='btn btn-light '>{t('register')}</button></a>
+            </div>
         </div>
     )
 }
