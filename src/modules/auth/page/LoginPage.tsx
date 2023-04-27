@@ -70,7 +70,9 @@ const LoginPage = (props: Props) => {
             </select>
             <img src={logo} alt="" style={{ maxWidth: '250px', margin: '32px' }} />
             <h1>Login</h1>
-            <p>Mọi người clone về xong chạy local:3000 ấy ạ ; <br /> này ko đúng port BackEnd ko nhận đâu ạ; <br /> Em chạy local thì được mà deploy thì ko được hic hic </p>
+            <p>Mọi người clone về xong chạy local:3000 ấy ạ ; <br /> này ko đúng port BackEnd ko nhận đâu ạ; <br /> Em chạy local thì được mà deploy thì ko được hic hic <br />
+                Github : <a href="https://github.com/Huuquy-HAu/HomeWorkPGG">https://github.com/Huuquy-HAu/HomeWorkPGG</a>
+            </p>
             <LoginForm onLogin={onLogin} />
             <div >
                 <a href={ROUTES.signup}><button className='btn btn-light '>{t('register')}</button></a>
