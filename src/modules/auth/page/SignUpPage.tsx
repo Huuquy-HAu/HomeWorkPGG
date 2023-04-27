@@ -9,6 +9,9 @@ import { ACCESS_TOKEN_KEY } from '../../../utils/constants'
 import Cookies from 'js-cookie'
 import { notification } from 'antd';
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from "react-redux"
+import { setUserInfor } from '../redux/userReducer'
+
 
 
 
@@ -16,6 +19,7 @@ import { useNavigate } from 'react-router-dom'
 const SignUpPage = () => {
     const [location, setLocation] = useState<any>([])
     const nav = useNavigate()
+    const dispatch = useDispatch()
 
     const getLocation = async () => {
         const res = await axios.get(API_PATHS.getLocation)
@@ -43,7 +47,7 @@ const SignUpPage = () => {
     const onSignUp = async (values: ISignUpParams) => {
         const res = await axios.post(API_PATHS.signUp,{ email: values.email, password: values.password , repeatPassword:values.repeatPassword , name: values.name , gender: values.gender , region:values.region, state: values.state})
         if (res?.data.code === RESPONSE_STATUS_SUCCESS) {
-            console.log('set token oke');
+            dispatch(setUserInfor(res.data.data))
             Cookies.set(ACCESS_TOKEN_KEY, res.data.data.token, { expires: 7}); 
             successToastAntd("Successful account registration, you will be redirected to the homepage")
             nav('/')

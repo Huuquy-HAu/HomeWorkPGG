@@ -4,6 +4,7 @@ import { ILoginParams, ILoginValidation } from '../../../models/auth';
 import { validLogin, validateLogin } from '../utils';
 import {  message } from 'antd';
 import { useTranslation} from 'react-i18next';
+import { FormattedMessage } from 'react-intl';
 
 interface Props {
   onLogin(values: ILoginParams): void;
@@ -19,13 +20,6 @@ const LoginForm = (props: Props) => {
 
   const { handleSubmit, formState: { errors } } = useForm<ILoginParams>();
 
-  const [messageApi, contextHolder] = message.useMessage()
-  const error = (error: string) => {
-    message.open({
-      type: 'error',
-      content: error,
-    });
-  };
   const onSubmit: SubmitHandler<ILoginParams> = () => {
     const validate = validateLogin(formValues);
 
@@ -34,11 +28,8 @@ const LoginForm = (props: Props) => {
     if (!validLogin(validate)) {
       return;
     }
-
+    
     onLogin(formValues);
-    if (!validLogin(validate)) {
-      return;
-    }
   }
 
   return (
@@ -60,6 +51,11 @@ const LoginForm = (props: Props) => {
           value={formValues.email}
           onChange={(e) => { setFormValues({ ...formValues, email: e.target.value }) }}
         />
+        {!!validate?.email && (
+          <small className="text-danger">
+            {validate?.email}
+          </small>
+        )}
       </div>
       <div className="col-md-12">
         <div>
@@ -73,6 +69,11 @@ const LoginForm = (props: Props) => {
           value={formValues.password}
           onChange={(e) => setFormValues({ ...formValues, password: e.target.value })}
         />
+        {!!validate?.password && (
+          <small className="text-danger">
+            {validate?.password}
+          </small>
+        )}
       </div>
 
 

@@ -4,18 +4,20 @@ import { ILocationParams, ISignUpParams } from '../../../models/auth';
 import axios from 'axios';
 import { API_PATHS } from '../../../configs/api';
 import { notification } from 'antd';
-import { useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { validateSignUp } from '../utils';
 
 
 interface Props {
     location: Array<ILocationParams>,
-    onSignUp(values:ISignUpParams):void
+    onSignUp(values: ISignUpParams): void
 }
 
 const SignUpForm = (props: Props) => {
     const { location, onSignUp } = props
     const [formValues, setFormValues] = React.useState<ISignUpParams>({ email: '', password: '', repeatPassword: '', name: '', gender: '', region: '', state: "" });
-    const { handleSubmit, register , formState: { errors } } = useForm<ISignUpParams>();
+    const [validate, setValidate] = React.useState<ISignUpParams>();
+    const { handleSubmit, register, formState: { errors } } = useForm<ISignUpParams>();
     const [region, setRegion] = useState<string | null>(null)
     const [pid, setPid] = useState<Array<any>>([])
     const { t } = useTranslation()
@@ -25,25 +27,16 @@ const SignUpForm = (props: Props) => {
         setPid([...res.data.data])
     }
 
-    const errorToastAntd = (message:string) => {
-        notification.error({
-            message:"Error",
-            description:message
-        })
+    const onSubmitt: SubmitHandler<ISignUpParams> = () => {
+        const validate = validateSignUp(formValues)
+
+        setValidate(validate)
+
+        if (!validateSignUp(validate)) {
+            return;
+        }
+        onSignUp(formValues)
     }
-
-    const onSubmitt:SubmitHandler<ISignUpParams> = () => {
-        if(!formValues.email || !formValues.gender || !formValues.name || !formValues.password || !formValues.region || !formValues.repeatPassword || !formValues.state){
-            return errorToastAntd("Không được bỏ trống thông tin")
-        }
-
-        if(formValues.password === formValues.repeatPassword){
-            onSignUp(formValues);
-        }else{
-            return errorToastAntd("PassWord and Repeat Password not same")
-        }
-
-    } 
 
     useEffect(() => {
         getRegion()
@@ -70,9 +63,13 @@ const SignUpForm = (props: Props) => {
                 <input
                     className="form-control"
                     value={formValues.email}
-                    {...register("email", { required :true})}
                     onChange={(e) => { setFormValues({ ...formValues, email: e.target.value }) }}
                 />
+                {!!validate?.email && (
+                    <small className="text-danger">
+                        {validate?.email}
+                    </small>
+                )}
             </div>
             <div className="col-md-12">
                 <div>
@@ -82,9 +79,15 @@ const SignUpForm = (props: Props) => {
                 </div>
                 <input
                     className="form-control"
+                    type='password'
                     value={formValues.password}
                     onChange={(e) => { setFormValues({ ...formValues, password: e.target.value }) }}
                 />
+                {!!validate?.password && (
+                    <small className="text-danger">
+                        {validate?.password}
+                    </small>
+                )}
             </div>
 
             <div className="col-md-12">
@@ -95,9 +98,15 @@ const SignUpForm = (props: Props) => {
                 </div>
                 <input
                     className="form-control"
+                    type='password'
                     value={formValues.repeatPassword}
                     onChange={(e) => { setFormValues({ ...formValues, repeatPassword: e.target.value }) }}
                 />
+                {!!validate?.repeatPassword && (
+                    <small className="text-danger">
+                        {validate?.repeatPassword}
+                    </small>
+                )}
             </div>
 
             <div className="col-md-12">
@@ -111,6 +120,11 @@ const SignUpForm = (props: Props) => {
                     value={formValues.name}
                     onChange={(e) => { setFormValues({ ...formValues, name: e.target.value }) }}
                 />
+                {!!validate?.name && (
+                    <small className="text-danger">
+                        {validate?.name}
+                    </small>
+                )}
             </div>
 
             <div className="col-md-12">
@@ -132,6 +146,11 @@ const SignUpForm = (props: Props) => {
                         {t('female')}
                     </option>
                 </select>
+                {!!validate?.gender && (
+                    <small className="text-danger">
+                        {validate?.gender}
+                    </small>
+                )}
             </div>
 
             <div className="col-md-12">
@@ -162,6 +181,11 @@ const SignUpForm = (props: Props) => {
                     })}
 
                 </select>
+                {!!validate?.region && (
+                    <small className="text-danger">
+                        {validate?.region}
+                    </small>
+                )}
             </div>
 
             {
@@ -188,6 +212,11 @@ const SignUpForm = (props: Props) => {
                                 )
                             })}
                         </select>
+                        {!!validate?.state && (
+                            <small className="text-danger">
+                                {validate?.state}
+                            </small>
+                        )}
                     </div>
                     : null
             }
