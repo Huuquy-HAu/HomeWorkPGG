@@ -69,7 +69,8 @@ const LoginPage = (props: Props) => {
                 <option value="en">English</option>
             </select>
             <img src={logo} alt="" style={{ maxWidth: '250px', margin: '32px' }} />
-            <h1>Form Login V2</h1>
+            <h1>Login</h1>
+            <p>Mọi người clone về xong chạy local:3000 ấy ạ ; <br /> này ko đúng port BackEnd ko nhận đâu ạ; <br /> Em chạy local thì được mà deploy thì ko được hic hic </p>
             <LoginForm onLogin={onLogin} />
             <div >
                 <a href={ROUTES.signup}><button className='btn btn-light '>{t('register')}</button></a>
